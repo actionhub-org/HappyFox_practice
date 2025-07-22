@@ -17,7 +17,7 @@ root/
 
 ### 1. Clone the repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Adarsh2345/Action_Hub_practice.git
 cd <project-root>
 ```
 
@@ -56,5 +56,4 @@ npm start
 - Fork, branch, and submit PRs.
 - Use clear commit messages.
 
-## License
-MIT 
+
