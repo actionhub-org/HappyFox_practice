@@ -1,29 +1,30 @@
-// src/Dashboard.js
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { supabase } from './supabaseClient';
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
-
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-    });
+    const sendTokenToBackend = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const accessToken = session?.access_token;
+
+      if (accessToken) {
+        await fetch('http://localhost:5000/api/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+      }
+    };
+
+    sendTokenToBackend();
   }, []);
 
-  const logout = async () => {
-    await supabase.auth.signOut();
-    window.location.reload(); // refresh to return to Auth UI
-  };
-
-  if (!user) return <p>Loading user...</p>;
-
-  return (
-    <div>
-      <h2>Welcome, {user.email}</h2>
-      <button onClick={logout}>Logout</button>
-    </div>
-  );
+  return <div>✅ Logged in! Dashboard content here.</div>;
 }
 
 export default Dashboard;
