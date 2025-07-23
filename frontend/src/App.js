@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
-  const [message, setMessage] = useState('');
+import CheckoutButton from './CheckoutButton';
+import Success from './Success';
+import Cancel from './Cancel';
 
-  useEffect(() => {
-    axios.get('/')
-      .then(res => setMessage(res.data.message))
-      .catch(err => setMessage('Error connecting to backend'));
-  }, []);
-
+function Home({ message }) {
   return (
     <div className="App">
       <header className="App-header">
@@ -19,6 +15,10 @@ function App() {
         <p>
           Backend says: <strong>{message}</strong>
         </p>
+
+        <h2>Hackathon Payment Module</h2>
+        <CheckoutButton />
+
         <a
           className="App-link"
           href="https://reactjs.org"
@@ -29,6 +29,27 @@ function App() {
         </a>
       </header>
     </div>
+  );
+}
+
+function App() {
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:5000/')
+      .then(res => res.json())
+      .then(data => setMessage(data.message))
+      .catch(() => setMessage('Error connecting to backend'));
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home message={message} />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
