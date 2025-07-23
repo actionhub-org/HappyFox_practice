@@ -1,9 +1,10 @@
+require('dotenv').config();
+console.log('Stripe key:', process.env.STRIPE_SECRET_KEY);
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,23 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });
+});
+
+app.post('/create-payment-intent', async (req, res) => {
+  const { amount } = req.body;
+  if (!amount) {
+    return res.status(400).json({ error: 'Amount is required' });
+  }
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(Number(amount) * 100), // amount in cents
+      currency: 'usd',
+      automatic_payment_methods: { enabled: true },
+    });
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.listen(PORT, () => {
