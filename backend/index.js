@@ -23,18 +23,28 @@ app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend!' });
 });
 
-app.post('/create-payment-intent', async (req, res) => {
+app.post('/create-checkout-session', async (req, res) => {
   const { amount } = req.body;
-  if (!amount) {
-    return res.status(400).json({ error: 'Amount is required' });
-  }
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(Number(amount) * 100), // amount in cents
-      currency: 'usd',
-      automatic_payment_methods: { enabled: true },
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Custom Payment',
+            },
+            unit_amount: Math.round(Number(amount) * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: 'http://localhost:3000/success', // Change to your frontend success page
+      cancel_url: 'http://localhost:3000/cancel',   // Change to your frontend cancel page
     });
-    res.json({ clientSecret: paymentIntent.client_secret });
+    res.json({ url: session.url });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
