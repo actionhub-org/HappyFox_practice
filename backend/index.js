@@ -4,7 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = 5000;
+const PORT = 5100;
 
 app.use(cors());
 app.use(express.json());
@@ -17,6 +17,10 @@ mongoose
 // Routes
 const userRoutes = require('./routes/user');
 app.use('/api/user', userRoutes);
+const eventRoutes = require('./routes/event');
+app.use('/api/event', eventRoutes);
+const venueRoutes = require('./routes/venue');
+app.use('/api/venues', venueRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

@@ -1,0 +1,55 @@
+# Node.js
+node_modules/
+.env
+.env.*
+package-lock.json
+yarn.lock
+npm-debug.log*
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+venv/
+ENV/
+env/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Excel/CSV test data
+*.xlsx
+*.csv
+
+# Misc
+*.swp
+.idea/
+
+# Coverage
+coverage/
+*.cover
+*.coverage
+
+# Test output
+*.out
+*.test
+
+# Local scripts
+*.local.js
+*.local.py 
